@@ -1,0 +1,65 @@
+package jdbcprojectwork1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class jdbcp1 {
+
+    public static void main(String[] args) {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        String URL = "jdbc:mysql://localhost:3306/jdbcproject1";
+        String Username = "root";
+        String Password = "Ajay@072003";
+
+        String Using = "USE jdbcproject1"; 
+        try {
+            con = DriverManager.getConnection(URL, Username, Password);
+            stmt = con.createStatement();
+            stmt.execute(Using); 
+
+//            stmt.execute("insert into employees values (1,'Ajay','Team lead',70000)");
+//            stmt.execute("insert into employees values (2,'Srikanth','manager',100000)");
+//            stmt.execute("insert into employees values (3,'Suijth','h&s department',90000)");
+            rs = stmt.executeQuery("select * from employees");
+
+            while (rs.next()) {
+                System.out.println("____________________________");
+
+                int emp_id = rs.getInt("emp_id");
+                String emp_name = rs.getString("emp_name");
+                String emp_Designation = rs.getString("emp_Designation");
+                int emp_salary = rs.getInt("emp_salary");
+
+                System.out.println("employee id :" + emp_id);
+                System.out.println("employee name :" + emp_name);
+                System.out.println("employee Designation:" + emp_Designation);
+                System.out.println("employee salary:" + emp_salary);
+                System.out.println("__________________________");
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+
+        } catch (SQLException e) {
+            System.out.println("In catch" + e.getMessage());
+        } finally {
+            if (con != null) {
+                try {
+                    rs.close();
+                    stmt.close();
+                    con.close();
+
+                    System.out.println("Terminated Successfully");
+                } catch (Exception e) {
+                    System.out.println("Oops! Some serious issue");
+                }
+            }
+        }
+    }
+}
